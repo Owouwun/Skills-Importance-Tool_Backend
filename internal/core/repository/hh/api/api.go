@@ -63,6 +63,7 @@ func BuildQuery(roles []string, from time.Time) string {
 	q.Set("text", "(Go OR Golang) AND (NOT \"Яндекс GO\")") // Дурацкая доставка мешает нормально находить вакансии на Гошника 👺👺👺
 	q.Set("search_field", "name")
 	q.Set("date_from", from.Format(layout))
+	q.Set("order_by", "publication_time")
 
 	for _, v := range roles {
 		q.Add("professional_role", v)
