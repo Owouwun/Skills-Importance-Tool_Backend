@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 )
 
 type Repository struct{}
@@ -49,7 +50,7 @@ func GetITRolesIDs() []string {
 	return nil
 }
 
-func BuildQuery(roles []string) string {
+func BuildQuery(roles []string, from time.Time) string {
 	baseURL := "https://api.hh.ru/vacancies"
 
 	u, err := url.Parse(baseURL)
@@ -61,6 +62,7 @@ func BuildQuery(roles []string) string {
 
 	q.Set("text", "(Go OR Golang) AND (NOT \"Яндекс GO\")") // Дурацкая доставка мешает нормально находить вакансии на Гошника 👺👺👺
 	q.Set("search_field", "name")
+	q.Set("date_from", from.Format(time.RFC3339)) // То же самое, что и ISO 8601, требуемый API hh.ru.
 
 	for _, v := range roles {
 		q.Add("professional_role", v)

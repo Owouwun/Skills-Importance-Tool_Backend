@@ -2,6 +2,7 @@ package hh
 
 import (
 	"fmt"
+	"time"
 	"vacanciesParser/internal/core/repository/hh/api"
 	"vacanciesParser/internal/core/repository/hh/cache"
 )
@@ -20,15 +21,16 @@ func GetITRolesIDs() []string {
 	return ids
 }
 
-func BuildQuery(roles []string) string {
-	return api.BuildQuery(roles)
+func BuildQuery(roles []string, from time.Time) string {
+	return api.BuildQuery(roles, from)
 }
 
-func GetVacancies() api.Vacancies {
+func GetVacancies(from time.Time) api.Vacancies {
 	vacancies := make([]api.Vacancy, 0)
 
 	query := BuildQuery(
 		GetITRolesIDs(),
+		from,
 	)
 
 	pages := 1
