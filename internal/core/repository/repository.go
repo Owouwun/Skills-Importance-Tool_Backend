@@ -12,5 +12,9 @@ func NewRepository() *Repository {
 }
 
 func (repo *Repository) GetVacancies() []logic.Vacancy {
-	return hh.GetVacancies().ToLogic()
+	vacancies := make([]logic.Vacancy, 0)
+
+	vacancies = append(vacancies, hh.GetVacancies().ToLogic()...)
+
+	return vacancies
 }

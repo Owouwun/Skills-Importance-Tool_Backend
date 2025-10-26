@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 type Repository struct{}
@@ -64,6 +65,21 @@ func BuildQuery(roles []string) string {
 	for _, v := range roles {
 		q.Add("professional_role", v)
 	}
+
+	u.RawQuery = q.Encode()
+
+	return u.String()
+}
+
+func UpdateQueryPage(query string, page int) string {
+	u, err := url.Parse(query)
+	if err != nil {
+		panic(err)
+	}
+
+	q := u.Query()
+
+	q.Set("page", strconv.Itoa(page))
 
 	u.RawQuery = q.Encode()
 

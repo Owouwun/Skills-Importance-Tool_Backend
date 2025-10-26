@@ -24,12 +24,25 @@ func BuildQuery(roles []string) string {
 	return api.BuildQuery(roles)
 }
 
-func GetVacancies() VacanciesResponse {
+func GetVacancies() api.Vacancies {
+	vacancies := make([]api.Vacancy, 0)
+
 	query := BuildQuery(
 		GetITRolesIDs(),
 	)
 
-	return NewVacanciesResponse(
-		api.GetVacancies(query),
-	)
+	pages := 1
+	for page := 1; page <= pages; page++ {
+		q := api.UpdateQueryPage(query, page)
+
+		vs := api.GetVacancies(q)
+
+		vacancies = append(vacancies, vs.Items...)
+
+		// Лучше обновлять количество страниц на случай, если в процессе работы новые вакансии породят новую страницу.
+		// Можно оптимизировать, обновляя pages только когда page его догоняет (возможно даже запустив отдельный for), но выглядит излишним.
+		pages = vs.Pages
+	}
+
+	return vacancies
 }

@@ -1,5 +1,9 @@
 package api
 
+import (
+	"vacanciesParser/internal/core/logic"
+)
+
 type Role struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
@@ -48,10 +52,28 @@ type Vacancy struct {
 	Employer    VacancyEmployer `json:"employer"`
 }
 
+type Vacancies []Vacancy
+
 type VacanciesResponse struct {
-	Items   []Vacancy `json:"items"`
+	Items   Vacancies `json:"items"`
 	Found   int       `json:"found"`
 	Pages   int       `json:"pages"`
 	Page    int       `json:"page"`
 	PerPage int       `json:"per_page"`
+}
+
+func (vs Vacancies) ToLogic() []logic.Vacancy {
+	vacancies := make([]logic.Vacancy, 0, len(vs))
+
+	for _, v := range vs {
+		vacancies = append(vacancies, logic.Vacancy{
+			Name:        v.Name,
+			Salary:      logic.VacancySalary(v.Salary),
+			PublishedAt: v.PublishedAt,
+			URL:         v.URL,
+			Employer:    logic.VacancyEmployer(v.Employer),
+		})
+	}
+
+	return vacancies
 }
