@@ -34,27 +34,32 @@ type RolesResponse struct {
 	Categories []Category `json:"categories"`
 }
 
-type VacancySalary struct {
+type Salary struct {
 	From     int    `json:"from"`
 	To       int    `json:"to"`
 	Currency string `json:"currency"`
 	Gross    bool   `json:"gross"`
 }
 
-type VacancyEmployer struct {
+type Employer struct {
 	ID           string `json:"id"`
 	Name         string `json:"name"`
 	CountryId    int    `json:"country_id"`
 	IsAccredited bool   `json:"accredited_it_employer"`
 }
 
+type NameField struct {
+	Name string `json:"name"`
+}
+
 type Vacancy struct {
-	ID          string          `json:"id"`
-	Name        string          `json:"name"`
-	Salary      VacancySalary   `json:"salary"`
-	PublishedAt string          `json:"published_at"`
-	URL         string          `json:"alternate_url"`
-	Employer    VacancyEmployer `json:"employer"`
+	Name        string      `json:"name"`
+	Salary      Salary      `json:"salary"`
+	PublishedAt string      `json:"published_at"`
+	URL         string      `json:"alternate_url"`
+	Employer    Employer    `json:"employer"`
+	WorkFormat  []NameField `json:"work_format"`
+	Experience  NameField   `json:"experience"`
 }
 
 type Vacancies []Vacancy
@@ -77,6 +82,11 @@ func (vs Vacancies) ToLogic() []logic.Vacancy {
 			publicationDate = time.UnixMicro(0)
 		}
 
+		workFormats := make([]string, 0)
+		for _, format := range v.WorkFormat {
+			workFormats = append(workFormats, format.Name)
+		}
+
 		vacancies = append(vacancies, logic.Vacancy{
 			Title:           v.Name,
 			Source:          "hh",
@@ -85,6 +95,8 @@ func (vs Vacancies) ToLogic() []logic.Vacancy {
 			MinPayment:      v.Salary.From,
 			MaxPayment:      v.Salary.To,
 			Currency:        v.Salary.Currency,
+			WorkFormat:      workFormats,
+			Experience:      v.Experience.Name,
 			PublicationDate: publicationDate,
 			IsProcessed:     false,
 		})

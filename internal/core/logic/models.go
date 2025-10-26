@@ -24,6 +24,8 @@ type Vacancy struct {
 	MinPayment      int
 	MaxPayment      int
 	Currency        string
+	WorkFormat      []string
+	Experience      string
 	PublicationDate time.Time
 	IsProcessed     bool
 }
