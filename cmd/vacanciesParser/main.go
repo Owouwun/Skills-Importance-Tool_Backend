@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"vacanciesParser/internal/app"
 	"vacanciesParser/internal/core/logic"
 	"vacanciesParser/internal/core/repository"
 )
@@ -22,5 +22,5 @@ func main() {
 
 	vacancies := l.GetVacancies()
 
-	fmt.Println(vacancies)
+	app.SaveToJSON(vacancies)
 }
