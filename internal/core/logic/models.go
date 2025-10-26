@@ -1,5 +1,7 @@
 package logic
 
+import "time"
+
 type VacancySalary struct {
 	From     int
 	To       int
@@ -15,9 +17,13 @@ type VacancyEmployer struct {
 }
 
 type Vacancy struct {
-	Name        string
-	Salary      VacancySalary
-	PublishedAt string
-	URL         string
-	Employer    VacancyEmployer
+	Title           string
+	Source          string
+	URL             string
+	Company         string
+	MinPayment      int
+	MaxPayment      int
+	Currency        string
+	PublicationDate time.Time
+	IsProcessed     bool
 }

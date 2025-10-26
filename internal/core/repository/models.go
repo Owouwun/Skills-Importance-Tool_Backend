@@ -7,7 +7,3 @@ import (
 type Vacancies struct {
 	hh.VacanciesResponse
 }
-
-func NewVacancies(vr hh.VacanciesResponse) Vacancies {
-	return Vacancies{vr}
-}

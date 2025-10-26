@@ -1,8 +1,13 @@
 package api
 
 import (
+	"log"
+	"time"
 	"vacanciesParser/internal/core/logic"
 )
+
+// API hh.ru говорит, что использует ISO 8601, но почему-то у них нет символа ":" в таймзоне
+const layout = "2006-01-02T15:04:05Z0700"
 
 type Role struct {
 	ID   string `json:"id"`
@@ -66,12 +71,22 @@ func (vs Vacancies) ToLogic() []logic.Vacancy {
 	vacancies := make([]logic.Vacancy, 0, len(vs))
 
 	for _, v := range vs {
+		publicationDate, err := time.Parse(layout, v.PublishedAt)
+		if err != nil {
+			log.Printf("Error while parsing publication date: %v", err)
+			publicationDate = time.UnixMicro(0)
+		}
+
 		vacancies = append(vacancies, logic.Vacancy{
-			Name:        v.Name,
-			Salary:      logic.VacancySalary(v.Salary),
-			PublishedAt: v.PublishedAt,
-			URL:         v.URL,
-			Employer:    logic.VacancyEmployer(v.Employer),
+			Title:           v.Name,
+			Source:          "hh",
+			URL:             v.URL,
+			Company:         v.Employer.Name,
+			MinPayment:      v.Salary.From,
+			MaxPayment:      v.Salary.To,
+			Currency:        v.Salary.Currency,
+			PublicationDate: publicationDate,
+			IsProcessed:     false,
 		})
 	}
 

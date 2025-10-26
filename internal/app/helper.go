@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
+	"time"
 )
 
 func SaveToJSON(data any) {
@@ -13,11 +15,20 @@ func SaveToJSON(data any) {
 		return
 	}
 
-	filename := "data.json"
-
-	err = os.WriteFile(filename, jsonData, 0644)
+	folderName := "vacancies"
+	err = os.MkdirAll(folderName, 0755)
 	if err != nil {
-		fmt.Printf("Ошибка записи данных в файл %s: %v\n", filename, err)
+		fmt.Printf("Ошибка создания папки %s: %v\n", folderName, err)
+		return
+	}
+
+	fileName := fmt.Sprintf("%s.json", time.Now().Format(time.RFC3339))
+
+	fullPath := filepath.Join(folderName, fileName)
+
+	err = os.WriteFile(fullPath, jsonData, 0644)
+	if err != nil {
+		fmt.Printf("Ошибка записи данных в файл %s: %v\n", fullPath, err)
 		return
 	}
 }

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -25,17 +24,4 @@ func init() {
 	}
 
 	fmt.Println("Успешно подключено к Redis:", pong)
-}
-
-func GetLastExecutionDate() string {
-	LEDate, err := Rdb.Get(Ctx, "LastExecutionDate").Result()
-	if err != nil {
-		log.Printf("Redis: Ошибка определения даты последнего запуска скрипта: %v", err)
-	}
-
-	return LEDate
-}
-
-func UpdateExecutionDate() {
-	Rdb.Set(Ctx, "LastExecutionDate", time.Now().String(), 0)
 }
