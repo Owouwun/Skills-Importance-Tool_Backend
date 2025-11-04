@@ -1,7 +1,6 @@
 package main
 
 import (
-	"vacanciesParser/internal/app"
 	"vacanciesParser/internal/core/logic"
 	"vacanciesParser/internal/core/repository"
 )
@@ -20,7 +19,5 @@ func main() {
 	repo := repository.NewRepository()
 	l := logic.NewService(repo)
 
-	vacancies := l.GetVacancies()
-
-	app.SaveToJSON(vacancies)
+	l.GetVacancies()
 }

@@ -1,7 +1,7 @@
 package logic
 
 type Repository interface {
-	GetVacancies() []Vacancy
+	GetVacancies()
 }
 
 type Service struct {
@@ -14,6 +14,6 @@ func NewService(repo Repository) *Service {
 	}
 }
 
-func (s *Service) GetVacancies() []Vacancy {
-	return s.repo.GetVacancies()
+func (s *Service) GetVacancies() {
+	s.repo.GetVacancies()
 }

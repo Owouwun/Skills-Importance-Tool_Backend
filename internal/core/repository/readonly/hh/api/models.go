@@ -3,7 +3,7 @@ package api
 import (
 	"log"
 	"time"
-	"vacanciesParser/internal/core/logic"
+	"vacanciesParser/internal/core/repository/mongodb"
 )
 
 // API hh.ru говорит, что использует ISO 8601, но почему-то у них нет символа ":" в таймзоне
@@ -72,8 +72,8 @@ type VacanciesResponse struct {
 	PerPage int       `json:"per_page"`
 }
 
-func (vs Vacancies) ToLogic() []logic.Vacancy {
-	vacancies := make([]logic.Vacancy, 0, len(vs))
+func (vs Vacancies) ToMongo() []mongodb.Vacancy {
+	vacancies := make([]mongodb.Vacancy, 0, len(vs))
 
 	for _, v := range vs {
 		publicationDate, err := time.Parse(layout, v.PublishedAt)
@@ -87,14 +87,22 @@ func (vs Vacancies) ToLogic() []logic.Vacancy {
 			workFormats = append(workFormats, format.Name)
 		}
 
-		vacancies = append(vacancies, logic.Vacancy{
-			Title:           v.Name,
-			Source:          "hh",
-			URL:             v.URL,
-			Company:         v.Employer.Name,
-			MinPayment:      v.Salary.From,
-			MaxPayment:      v.Salary.To,
-			Currency:        v.Salary.Currency,
+		vacancies = append(vacancies, mongodb.Vacancy{
+			Title:   v.Name,
+			Source:  "hh",
+			URL:     v.URL,
+			Company: v.Employer.Name,
+			Salary: &mongodb.Salary{
+				From:     v.Salary.From,
+				To:       v.Salary.To,
+				Currency: v.Salary.Currency,
+				Gross:    v.Salary.Gross,
+			},
+			Employer: &mongodb.Employer{
+				Name:         v.Employer.Name,
+				CountryId:    v.Employer.CountryId,
+				IsAccredited: v.Employer.IsAccredited,
+			},
 			WorkFormat:      workFormats,
 			Experience:      v.Experience.Name,
 			PublicationDate: publicationDate,

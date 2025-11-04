@@ -3,8 +3,8 @@ package hh
 import (
 	"fmt"
 	"time"
-	"vacanciesParser/internal/core/repository/hh/api"
-	"vacanciesParser/internal/core/repository/hh/cache"
+	"vacanciesParser/internal/core/repository/readonly/hh/api"
+	"vacanciesParser/internal/core/repository/readonly/hh/cache"
 )
 
 func GetITRolesIDs() []string {
