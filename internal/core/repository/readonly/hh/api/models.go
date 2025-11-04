@@ -87,17 +87,24 @@ func (vs Vacancies) ToMongo() []mongodb.Vacancy {
 			workFormats = append(workFormats, format.Name)
 		}
 
+		var salary *mongodb.Salary
+		if v.Salary.From == 0 && v.Salary.To == 0 {
+			salary = nil
+		} else {
+			salary = &mongodb.Salary{
+				From:     v.Salary.From,
+				To:       v.Salary.To,
+				Currency: v.Salary.Currency,
+				Gross:    v.Salary.Gross,
+			}
+		}
+
 		vacancies = append(vacancies, mongodb.Vacancy{
 			Title:   v.Name,
 			Source:  "hh",
 			URL:     v.URL,
 			Company: v.Employer.Name,
-			Salary: &mongodb.Salary{
-				From:     v.Salary.From,
-				To:       v.Salary.To,
-				Currency: v.Salary.Currency,
-				Gross:    v.Salary.Gross,
-			},
+			Salary:  salary,
 			Employer: &mongodb.Employer{
 				Name:         v.Employer.Name,
 				CountryId:    v.Employer.CountryId,
