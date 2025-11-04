@@ -8,7 +8,7 @@ import (
 func GetITRolesIDs() []string {
 	cachedResult, err := cache.Rdb.LRange(cache.Ctx, "hhITRolesIDs", 0, -1).Result()
 	if err != nil {
-		log.Printf("Error while getting cache: %v", err)
+		log.Printf("Error while getting cache: %v\n", err)
 	}
 
 	return cachedResult

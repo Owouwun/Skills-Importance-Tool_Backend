@@ -78,7 +78,7 @@ func (vs Vacancies) ToMongo() []mongodb.Vacancy {
 	for _, v := range vs {
 		publicationDate, err := time.Parse(layout, v.PublishedAt)
 		if err != nil {
-			log.Printf("Error while parsing publication date: %v", err)
+			log.Printf("Error while parsing publication date: %v\n", err)
 			publicationDate = time.UnixMicro(0)
 		}
 

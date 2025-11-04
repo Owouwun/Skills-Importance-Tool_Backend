@@ -20,7 +20,7 @@ func init() {
 
 	pong, err := Rdb.Ping(Ctx).Result()
 	if err != nil {
-		log.Fatalf("Не удалось подключиться к Redis: %v", err)
+		log.Fatalf("Не удалось подключиться к Redis: %v\n", err)
 	}
 
 	fmt.Println("Успешно подключено к Redis:", pong)

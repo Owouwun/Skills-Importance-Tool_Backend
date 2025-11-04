@@ -11,7 +11,7 @@ import (
 func InsertData(ctx context.Context, docs []interface{}) {
 	client, err := mongo.Connect(options.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
-		log.Fatalf("Не удалось подключиться к MongoDB: %v", err)
+		log.Fatalf("Не удалось подключиться к MongoDB: %v\n", err)
 	}
 
 	result, err := client.Database("vacancies_parser").Collection("vacancy").InsertMany(ctx, docs)
@@ -20,5 +20,5 @@ func InsertData(ctx context.Context, docs []interface{}) {
 		return
 	}
 
-	log.Printf("Успешно вставлено документов: %d", len(result.InsertedIDs))
+	log.Printf("Успешно вставлено документов: %d\n", len(result.InsertedIDs))
 }

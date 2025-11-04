@@ -21,23 +21,23 @@ func GetITRolesIDs() []string {
 
 	resp, err := http.Get(apiURL)
 	if err != nil {
-		log.Fatalf("Ошибка при выполнении HTTP запроса: %v", err)
+		log.Fatalf("Ошибка при выполнении HTTP запроса: %v\n", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		log.Fatalf("Неожиданный статус ответа: %s", resp.Status)
+		log.Fatalf("Неожиданный статус ответа: %s\n", resp.Status)
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalf("Ошибка при чтении тела ответа: %v", err)
+		log.Fatalf("Ошибка при чтении тела ответа: %v\n", err)
 	}
 
 	var data RolesResponse
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		log.Fatalf("Ошибка при десериализации JSON: %v", err)
+		log.Fatalf("Ошибка при десериализации JSON: %v\n", err)
 	}
 
 	for _, v := range data.Categories {
@@ -46,7 +46,7 @@ func GetITRolesIDs() []string {
 		}
 	}
 
-	log.Fatalf("Ошибка: не найдена категория \"Информационные технологии\"")
+	log.Fatalf("Ошибка: не найдена категория \"Информационные технологии\"\n")
 	return nil
 }
 
@@ -92,23 +92,23 @@ func UpdateQueryPage(query string, page int) string {
 func GetVacancies(query string) VacanciesResponse {
 	resp, err := http.Get(query)
 	if err != nil {
-		log.Fatalf("Ошибка при выполнении HTTP запроса: %v", err)
+		log.Fatalf("Ошибка при выполнении HTTP запроса: %v\n", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		log.Fatalf("Неожиданный статус ответа: %s", resp.Status)
+		log.Fatalf("Неожиданный статус ответа: %s\n", resp.Status)
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalf("Ошибка при чтении тела ответа: %v", err)
+		log.Fatalf("Ошибка при чтении тела ответа: %v\n", err)
 	}
 
 	var data VacanciesResponse
 	err = json.Unmarshal(body, &data)
 	if err != nil {
-		log.Fatalf("Ошибка при десериализации JSON: %v", err)
+		log.Fatalf("Ошибка при десериализации JSON: %v\n", err)
 	}
 
 	return data
