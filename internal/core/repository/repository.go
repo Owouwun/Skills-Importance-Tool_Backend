@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"log"
 	"vacanciesParser/internal/core/repository/mongodb"
 	"vacanciesParser/internal/core/repository/readonly/hh"
 	"vacanciesParser/internal/core/repository/redis"
@@ -21,6 +22,11 @@ func (repo *Repository) GetVacancies() {
 
 	vacancies := make([]mongodb.Vacancy, 0)
 	vacancies = append(vacancies, hh.GetVacancies(from).ToMongo()...)
+
+	if len(vacancies) == 0 {
+		log.Printf("Новые вакансии на hh.ru не найдены.")
+		return
+	}
 
 	docs := make([]interface{}, len(vacancies))
 	for i, data := range vacancies {
