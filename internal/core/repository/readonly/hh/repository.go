@@ -10,7 +10,7 @@ import (
 func GetITRolesIDs() []string {
 	ans := cache.GetITRolesIDs()
 	if len(ans) > 0 {
-		fmt.Printf("Restored from cache: %v", ans)
+		fmt.Printf("Restored from cache: %v\n", ans)
 		return ans
 	}
 
