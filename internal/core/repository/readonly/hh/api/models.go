@@ -95,8 +95,22 @@ func (vs Vacancies) ToMongo() []mongodb.Vacancy {
 				From:     v.Salary.From,
 				To:       v.Salary.To,
 				Currency: v.Salary.Currency,
-				Gross:    v.Salary.Gross,
+				IsGross:  v.Salary.Gross,
 			}
+		}
+
+		var experience mongodb.ExperienceByYears
+		switch v.Experience.Name {
+		case "Нет опыта":
+			experience.To = 1
+		case "От 1 года до 3 лет":
+			experience.From = 1
+			experience.To = 3
+		case "От 3 до 6 лет":
+			experience.From = 3
+			experience.To = 6
+		case "Более 6 лет":
+			experience.From = 6
 		}
 
 		vacancies = append(vacancies, mongodb.Vacancy{
@@ -110,10 +124,10 @@ func (vs Vacancies) ToMongo() []mongodb.Vacancy {
 				CountryId:    v.Employer.CountryId,
 				IsAccredited: v.Employer.IsAccredited,
 			},
-			WorkFormat:      workFormats,
-			Experience:      v.Experience.Name,
-			PublicationDate: publicationDate,
-			IsProcessed:     false,
+			WorkFormat:        workFormats,
+			ExperienceByYears: experience,
+			PublicationDate:   publicationDate,
+			IsProcessed:       false,
 		})
 	}
 
