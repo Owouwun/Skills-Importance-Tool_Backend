@@ -38,3 +38,9 @@ type Vacancy struct {
 	PublicationDate   time.Time          `bson:"publication_date"`
 	IsProcessed       bool               `bson:"is_processed"`
 }
+
+type Skill struct {
+	ID       primitive.ObjectID  `bson:"_id"`
+	Name     string              `bson:"name"`
+	ParentID *primitive.ObjectID `bosn:"parent_id,omitempty"`
+}
