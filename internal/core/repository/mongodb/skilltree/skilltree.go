@@ -25,7 +25,6 @@ func NewSkillTreeRepository(client *mongo.Client) *Repository {
 	}
 }
 
-// TODO: Fix pipiline: all elements are just descendants of root
 func (r *Repository) GetSkillTree(ctx context.Context) (*skilltree.Node, error) {
 	findRoot := bson.D{
 		{Key: "$match", Value: bson.D{
@@ -41,7 +40,7 @@ func (r *Repository) GetSkillTree(ctx context.Context) (*skilltree.Node, error) 
 			{Key: "startWith", Value: "$_id"},
 			{Key: "connectFromField", Value: "_id"},
 			{Key: "connectToField", Value: "parent_id"},
-			{Key: "as", Value: "descendants"},
+			{Key: "as", Value: "nodes"},
 		}},
 	}
 
@@ -53,7 +52,7 @@ func (r *Repository) GetSkillTree(ctx context.Context) (*skilltree.Node, error) 
 	}
 	defer cursor.Close(ctx)
 
-	var resultDoc *SkillNode
+	var resultDoc *SkillTree
 	resultsNum := 0
 	for cursor.Next(ctx) {
 		resultsNum++

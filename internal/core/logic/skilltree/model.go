@@ -6,6 +6,6 @@ type NodePath struct {
 }
 
 type Node struct {
-	Name        string `json:"name"`
-	Descendants []Node `json:"descendants"`
+	Name     string `json:"name"`
+	Children []Node `json:"children"`
 }
