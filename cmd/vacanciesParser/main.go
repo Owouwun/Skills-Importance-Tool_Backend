@@ -1,23 +1,22 @@
 package main
 
 import (
-	"vacanciesParser/internal/core/logic"
+	"log"
+	"vacanciesParser/internal/app"
+	"vacanciesParser/internal/core/logic/vacancies"
 	"vacanciesParser/internal/core/repository"
 )
 
-/*
-	Вытягиваем все Golang-вакансии с hh.ru.
-
-	Алгоритм работы:
-	1. Тянем актуальные специализации из api.hh.ru/professional_roles.
-	2. Отобираем id всех тех, что находятся в группе "Информационные технологии".
-	3. Формируем и отправляем запрос к api.hh.ru/vacancies.
-	4. Итеративно обрабатываем все новые вакансии, собирая с них необходимую информацию и добавлем в базу данных.
-*/
-
 func main() {
 	repo := repository.NewRepository()
-	l := logic.NewService(repo)
 
-	l.GetVacancies()
+	vs := vacancies.NewService(repo)
+	vs.GetVacancies()
+
+	router := app.PrepareRouter()
+
+	log.Println("Starting server on :8080")
+	if err := router.Run(":8080"); err != nil {
+		log.Fatal("Server failed to start:", err)
+	}
 }

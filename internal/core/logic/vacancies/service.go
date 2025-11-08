@@ -1,4 +1,4 @@
-package logic
+package vacancies
 
 type Repository interface {
 	GetVacancies()

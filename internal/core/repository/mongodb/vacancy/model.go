@@ -1,4 +1,4 @@
-package mongodb
+package vacancy
 
 import (
 	"time"
@@ -37,10 +37,4 @@ type Vacancy struct {
 	ExperienceByYears ExperienceByYears  `bson:"experience_by_years"`
 	PublicationDate   time.Time          `bson:"publication_date"`
 	IsProcessed       bool               `bson:"is_processed"`
-}
-
-type Skill struct {
-	ID       primitive.ObjectID  `bson:"_id"`
-	Name     string              `bson:"name"`
-	ParentID *primitive.ObjectID `bosn:"parent_id,omitempty"`
 }

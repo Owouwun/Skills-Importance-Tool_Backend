@@ -3,7 +3,7 @@ package api
 import (
 	"log"
 	"time"
-	"vacanciesParser/internal/core/repository/mongodb"
+	vacancy "vacanciesParser/internal/core/repository/mongodb/vacancy"
 )
 
 // API hh.ru говорит, что использует ISO 8601, но почему-то у них нет символа ":" в таймзоне
@@ -72,8 +72,8 @@ type VacanciesResponse struct {
 	PerPage int       `json:"per_page"`
 }
 
-func (vs Vacancies) ToMongo() []mongodb.Vacancy {
-	vacancies := make([]mongodb.Vacancy, 0, len(vs))
+func (vs Vacancies) ToMongo() []vacancy.Vacancy {
+	vacancies := make([]vacancy.Vacancy, 0, len(vs))
 
 	for _, v := range vs {
 		publicationDate, err := time.Parse(layout, v.PublishedAt)
@@ -87,11 +87,11 @@ func (vs Vacancies) ToMongo() []mongodb.Vacancy {
 			workFormats = append(workFormats, format.Name)
 		}
 
-		var salary *mongodb.Salary
+		var salary *vacancy.Salary
 		if v.Salary.From == 0 && v.Salary.To == 0 {
 			salary = nil
 		} else {
-			salary = &mongodb.Salary{
+			salary = &vacancy.Salary{
 				From:     v.Salary.From,
 				To:       v.Salary.To,
 				Currency: v.Salary.Currency,
@@ -99,7 +99,7 @@ func (vs Vacancies) ToMongo() []mongodb.Vacancy {
 			}
 		}
 
-		var experience mongodb.ExperienceByYears
+		var experience vacancy.ExperienceByYears
 		switch v.Experience.Name {
 		case "Нет опыта":
 			experience.To = 1
@@ -113,13 +113,13 @@ func (vs Vacancies) ToMongo() []mongodb.Vacancy {
 			experience.From = 6
 		}
 
-		vacancies = append(vacancies, mongodb.Vacancy{
+		vacancies = append(vacancies, vacancy.Vacancy{
 			Title:   v.Name,
 			Source:  "hh",
 			URL:     v.URL,
 			Company: v.Employer.Name,
 			Salary:  salary,
-			Employer: &mongodb.Employer{
+			Employer: &vacancy.Employer{
 				Name:         v.Employer.Name,
 				CountryId:    v.Employer.CountryId,
 				IsAccredited: v.Employer.IsAccredited,
