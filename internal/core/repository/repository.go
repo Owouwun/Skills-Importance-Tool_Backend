@@ -19,8 +19,6 @@ type Repository struct {
 	skilltreeRepo *mongodb_skilltree.Repository
 }
 
-// TODO: Текущая реализация пакета skilltree зависит от наличия в базе элемента под названием root.
-// Либо убрать зависимость, либо создавать его автоматически при отсутствии.
 func NewRepository() *Repository {
 	client, err := mongodb.ConnectToMongoDB()
 	if err != nil {
