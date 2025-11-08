@@ -6,12 +6,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// TODO: Store all parents in a slice
 type SkillPath struct {
 	ID       primitive.ObjectID  `bson:"_id,omitempty"`
-	RootName string              `bson:"name"`
+	Name     string              `bson:"name"`
 	ParentID *primitive.ObjectID `bson:"parent_id,omitempty"`
-	NodePath []SkillPath         `bson:"children,omitempty"`
+	NodePath []string            `bson:"parents,omitempty"`
 }
 
 type SkillNode struct {

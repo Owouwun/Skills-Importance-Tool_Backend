@@ -14,8 +14,8 @@ func ConnectToMongoDB() (*mongo.Client, error) {
 	return mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb://localhost:27017"))
 }
 
-func GetIDs(ctx context.Context, cursor *mongo.Cursor) map[primitive.ObjectID]struct{} {
-	ids := make(map[primitive.ObjectID]struct{})
+func GetIDs(ctx context.Context, cursor *mongo.Cursor) map[primitive.ObjectID]any {
+	ids := make(map[primitive.ObjectID]any)
 
 	for cursor.Next(ctx) {
 		var doc bson.M
@@ -24,7 +24,8 @@ func GetIDs(ctx context.Context, cursor *mongo.Cursor) map[primitive.ObjectID]st
 			continue
 		}
 
-		ids[doc["_id"].(primitive.ObjectID)] = struct{}{}
+		ids[doc["_id"].(primitive.ObjectID)] = doc
+		log.Printf("ID этого объекта было найдено: %v", doc)
 	}
 
 	return ids
