@@ -138,7 +138,7 @@ func (r *Repository) isParent(ctx context.Context, potentialParent *SkillNode, n
 	return true, nil
 }
 
-func (r *Repository) insertChildren(ctx context.Context, parentID primitive.ObjectID, childrenName string) error {
+func (r *Repository) insertChild(ctx context.Context, parentID primitive.ObjectID, childrenName string) error {
 	if _, err := r.collection.InsertOne(ctx, SkillPath{
 		Name:     childrenName,
 		ParentID: &parentID,
@@ -162,7 +162,7 @@ func (r *Repository) CreateNode(ctx context.Context, node *skilltree.NodePath) e
 			return fmt.Errorf("не удалось выполнить поиск корневого узла в MongoDB: %v", err)
 		}
 
-		return r.insertChildren(ctx, root.ID, node.Name)
+		return r.insertChild(ctx, root.ID, node.Name)
 	}
 
 	potentialParents, err := r.findPotentialParents(ctx, node)
@@ -177,7 +177,7 @@ func (r *Repository) CreateNode(ctx context.Context, node *skilltree.NodePath) e
 		}
 
 		if isParent {
-			return r.insertChildren(ctx, potentialParent.ID, node.Name)
+			return r.insertChild(ctx, potentialParent.ID, node.Name)
 		}
 	}
 
