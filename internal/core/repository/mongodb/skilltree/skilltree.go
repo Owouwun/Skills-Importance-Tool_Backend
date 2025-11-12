@@ -16,7 +16,17 @@ type Repository struct {
 }
 
 func getSkillTreeCollection(client *mongo.Client) *mongo.Collection {
-	return client.Database("skill_importance").Collection("skill_tree")
+	collection := client.Database("skill_importance").Collection("skill_tree")
+
+	if err := collection.FindOne(context.Background(), bson.M{}).Decode(&bson.M{}); err == mongo.ErrNoDocuments {
+		log.Println(err)
+		collection.InsertOne(context.Background(), &SkillNode{
+			ID:   primitive.NewObjectID(),
+			Name: "root",
+		})
+	}
+
+	return collection
 }
 
 func NewSkillTreeRepository(client *mongo.Client) *Repository {
