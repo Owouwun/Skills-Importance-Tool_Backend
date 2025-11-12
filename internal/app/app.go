@@ -32,8 +32,6 @@ func newCORS() gin.HandlerFunc {
 	config := cors.DefaultConfig()
 
 	config.AllowOrigins = []string{
-		"http://localhost:5173",
-		"http://127.0.0.1:5173",
 		"http://localhost:3000",
 	}
 	config.AllowMethods = []string{"GET", "POST", "OPTIONS"}

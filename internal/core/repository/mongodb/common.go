@@ -11,7 +11,7 @@ import (
 )
 
 func ConnectToMongoDB() (*mongo.Client, error) {
-	return mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb://localhost:27017"))
+	return mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb://user:password@mongo-service:27017"))
 }
 
 func GetIDs(ctx context.Context, cursor *mongo.Cursor) map[primitive.ObjectID]any {
