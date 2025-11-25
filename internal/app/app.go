@@ -23,6 +23,7 @@ func PrepareRouter() *gin.Engine {
 	{
 		apiSkills.GET("", handlers_skilltree.GetSkillTree)
 		apiSkills.POST("", handlers_skilltree.CreateNode)
+		apiSkills.DELETE("", handlers_skilltree.DeleteNode)
 	}
 
 	return router
@@ -34,7 +35,7 @@ func newCORS() gin.HandlerFunc {
 	config.AllowOrigins = []string{
 		"http://localhost:3000",
 	}
-	config.AllowMethods = []string{"GET", "POST", "OPTIONS"}
+	config.AllowMethods = []string{"GET", "POST", "DELETE", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Access-Control-Allow-Origin"}
 	config.MaxAge = 12 * time.Hour
 

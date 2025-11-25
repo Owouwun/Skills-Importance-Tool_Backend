@@ -193,3 +193,83 @@ func (r *Repository) CreateNode(ctx context.Context, node *skilltree.NodePath) e
 
 	return fmt.Errorf("некорректный путь к создаваемому элементу дерева навыков")
 }
+
+func (r *Repository) findTargetNode(ctx context.Context, nodePath *skilltree.NodePath) (*SkillNode, error) {
+	if isRoot(nodePath) {
+		var rootNode SkillNode
+		err := r.collection.FindOne(ctx, bson.M{"name": nodePath.Name, "parent_id": nil}).Decode(&rootNode)
+		if err == mongo.ErrNoDocuments {
+			return nil, fmt.Errorf("корневой узел '%s' не найден", nodePath.Name)
+		}
+		return &rootNode, err
+	}
+
+	potentialParents, err := r.findPotentialParents(ctx, nodePath)
+	if err != nil {
+		return nil, err
+	}
+
+	var targetParent *SkillNode
+	for parent := range potentialParents {
+		isParentPath, err := r.isParent(ctx, parent, nodePath)
+		if err != nil {
+			return nil, err
+		}
+
+		if isParentPath {
+			if targetParent != nil {
+				return nil, fmt.Errorf("найдено несколько родительских узлов для пути: %v", nodePath.Path)
+			}
+			targetParent = parent
+		}
+	}
+
+	if targetParent == nil {
+		return nil, fmt.Errorf("некорректный путь: родительский узел не найден")
+	}
+
+	var targetNode SkillNode
+	err = r.collection.FindOne(ctx, bson.M{
+		"name":      nodePath.Name,
+		"parent_id": targetParent.ID,
+	}).Decode(&targetNode)
+
+	if err == mongo.ErrNoDocuments {
+		return nil, fmt.Errorf("целевой узел '%s' с родителем '%s' не найден", nodePath.Name, targetParent.Name)
+	}
+
+	return &targetNode, err
+}
+
+func (r *Repository) DeleteNode(ctx context.Context, node *skilltree.NodePath) error {
+	targetNode, err := r.findTargetNode(ctx, node)
+	if err != nil {
+		return err
+	}
+
+	childCheckFilter := bson.M{
+		"parent_id": targetNode.ID,
+	}
+
+	var childCheck SkillNode
+	err = r.collection.FindOne(ctx, childCheckFilter).Decode(&childCheck)
+
+	if err != mongo.ErrNoDocuments {
+		if err != nil {
+			return fmt.Errorf("ошибка при проверке потомков: %w", err)
+		}
+
+		return fmt.Errorf("невозможно удалить узел '%s': у него есть потомки", targetNode.Name)
+	}
+
+	deleteResult, err := r.collection.DeleteOne(ctx, bson.M{"_id": targetNode.ID})
+	if err != nil {
+		return fmt.Errorf("ошибка при удалении узла: %w", err)
+	}
+
+	if deleteResult.DeletedCount == 0 {
+		return fmt.Errorf("не удалось удалить узел (узел с ID %s не найден)", targetNode.ID.Hex())
+	}
+
+	return nil
+}

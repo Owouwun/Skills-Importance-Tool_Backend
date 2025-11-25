@@ -67,3 +67,7 @@ func (r *Repository) GetSkillTree(ctx context.Context) (*service_skilltree.Node,
 func (r *Repository) CreateNode(ctx context.Context, tree *service_skilltree.NodePath) error {
 	return r.skilltreeRepo.CreateNode(ctx, tree)
 }
+
+func (r *Repository) DeleteNode(ctx context.Context, tree *service_skilltree.NodePath) error {
+	return r.skilltreeRepo.DeleteNode(ctx, tree)
+}

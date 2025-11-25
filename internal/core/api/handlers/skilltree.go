@@ -11,6 +11,7 @@ import (
 type SkillTreeService interface {
 	GetSkillTree(ctx context.Context) (*skilltree.Node, error)
 	CreateNode(ctx context.Context, node *skilltree.NodePath) error
+	DeleteNode(ctx context.Context, node *skilltree.NodePath) error
 }
 
 type SkillTreeHandler struct {
@@ -47,4 +48,20 @@ func (h *SkillTreeHandler) CreateNode(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated, nil)
+}
+
+func (h *SkillTreeHandler) DeleteNode(ctx *gin.Context) {
+	var deletedNode *skilltree.NodePath
+	if err := ctx.ShouldBind(&deletedNode); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := h.service.DeleteNode(ctx, deletedNode)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, nil)
 }

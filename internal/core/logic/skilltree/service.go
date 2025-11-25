@@ -7,6 +7,7 @@ import (
 type Repository interface {
 	GetSkillTree(ctx context.Context) (*Node, error)
 	CreateNode(ctx context.Context, tree *NodePath) error
+	DeleteNode(ctx context.Context, tree *NodePath) error
 }
 
 type Service struct {
@@ -25,4 +26,8 @@ func (s *Service) GetSkillTree(ctx context.Context) (*Node, error) {
 
 func (s *Service) CreateNode(ctx context.Context, node *NodePath) error {
 	return s.repo.CreateNode(ctx, node)
+}
+
+func (s *Service) DeleteNode(ctx context.Context, node *NodePath) error {
+	return s.repo.DeleteNode(ctx, node)
 }
