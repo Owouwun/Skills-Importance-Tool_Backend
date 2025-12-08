@@ -3,6 +3,7 @@ package vacancy
 import (
 	"context"
 	"log"
+	"vacanciesParser/internal/core/repository/mongodb"
 
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -12,7 +13,7 @@ type Repository struct {
 }
 
 func getVacancyCollection(client *mongo.Client) *mongo.Collection {
-	return client.Database("skill_importance").Collection("vacancy")
+	return client.Database(mongodb.DBName).Collection("vacancy")
 }
 
 func NewVacancyRepository(client *mongo.Client) *Repository {

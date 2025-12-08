@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"vacanciesParser/internal/core/logic/skilltree"
+	"vacanciesParser/internal/core/repository/mongodb"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -16,7 +17,7 @@ type Repository struct {
 }
 
 func getSkillTreeCollection(client *mongo.Client) *mongo.Collection {
-	collection := client.Database("skill_importance").Collection("skill_tree")
+	collection := client.Database(mongodb.DBName).Collection("skill_tree")
 
 	if err := collection.FindOne(context.Background(), bson.M{}).Decode(&bson.M{}); err == mongo.ErrNoDocuments {
 		log.Println(err)
